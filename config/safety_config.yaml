@@ -1,0 +1,126 @@
+# إعدادات نظام الأمان
+# Safety System Configuration
+
+# إعدادات Fail-safe
+failsafe:
+  enable: true
+  timeout_px4_connection: 2.0  # ثانية
+  timeout_gps_signal: 5.0
+  timeout_sensor_update: 1.0
+  max_consecutive_errors: 5
+
+# إجراءات Fail-safe حسب المرحلة
+failsafe_actions:
+  pre_launch:
+    action: "abort"
+    notify: true
+  launch:
+    action: "deploy_parachute"
+    notify: true
+  ascent:
+    action: "deploy_parachute"
+    notify: true
+  apogee:
+    action: "deploy_main_parachute"
+    notify: true
+  descent:
+    action: "continue_descent"
+    notify: true
+  recovery:
+    action: "beacon_only"
+    notify: true
+
+# حدود التشغيل الآمن
+operational_limits:
+  # حدود البيئة
+  min_temperature: -20  # درجة مئوية
+  max_temperature: 60
+  max_wind_speed: 15  # متر/ثانية
+  
+  # حدود البطارية
+  min_battery_voltage: 10.5  # فولت
+  critical_battery_voltage: 10.0
+  
+  # حدود الطيران
+  max_flight_time: 600  # ثانية
+  max_distance_from_launch: 5000  # متر
+
+# نظام التحقق من الصحة
+health_monitoring:
+  enable: true
+  check_interval: 0.5  # ثانية
+  
+  # فحوصات المستشعرات
+  sensors:
+    imu:
+      enable: true
+      max_noise_level: 0.5
+      timeout: 1.0
+    gps:
+      enable: true
+      min_satellites: 6
+      max_hdop: 2.0
+      timeout: 2.0
+    barometer:
+      enable: true
+      max_noise_level: 2.0
+      timeout: 1.0
+    magnetometer:
+      enable: true
+      max_deviation: 30  # درجة
+      timeout: 1.0
+
+# نظام إنهاء الطيران
+flight_termination:
+  enable: true
+  # شروط الإنهاء التلقائي
+  auto_terminate_conditions:
+    - "altitude > max_altitude"
+    - "distance > max_distance_from_launch"
+    - "flight_time > max_flight_time"
+    - "battery_voltage < critical_battery_voltage"
+  
+  # إجراءات الإنهاء
+  termination_sequence:
+    - "cut_motor_power"
+    - "deploy_drogue_parachute"
+    - "wait_2_seconds"
+    - "deploy_main_parachute"
+    - "activate_beacon"
+    - "save_all_data"
+
+# نظام التنبيهات
+alerts:
+  enable: true
+  levels:
+    info:
+      log: true
+      notify: false
+    warning:
+      log: true
+      notify: true
+    error:
+      log: true
+      notify: true
+      action: "safe_mode"
+    critical:
+      log: true
+      notify: true
+      action: "flight_termination"
+
+# الوضع الآمن
+safe_mode:
+  enable: true
+  # إجراءات الوضع الآمن
+  actions:
+    - "disable_active_control"
+    - "enable_passive_stabilization"
+    - "increase_logging_rate"
+    - "send_telemetry_continuously"
+  
+  # شروط الخروج من الوضع الآمن
+  exit_conditions:
+    - "all_sensors_healthy"
+    - "px4_connection_stable"
+    - "manual_override"
+
