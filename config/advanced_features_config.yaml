@@ -1,0 +1,158 @@
+
+gps_navigation:
+  enabled: true
+  max_speed: 100.0  # m/s
+  approach_speed: 20.0  # m/s
+  orbit_radius: 50.0  # meters
+  acceptance_radius: 10.0  # meters
+  waypoint_timeout: 300.0  # seconds
+
+target_tracking:
+  enabled: true
+  prediction_time: 5.0  # seconds
+  intercept_angle_preference: 90.0  # degrees
+  min_intercept_distance: 10.0  # meters
+  max_history_size: 10
+  navigation_constant: 3.0  # Proportional navigation constant (3-5 typical)
+  max_target_range: 10000.0  # meters
+
+trajectory_control:
+  enabled: true
+  trajectory_type: "guided"  # Options: ballistic, guided, lofted, depressed, optimal
+  max_angle_of_attack: 15.0  # degrees
+  max_lateral_acceleration: 50.0  # m/s^2
+  trajectory_update_rate: 10.0  # Hz
+  
+  rocket_parameters:
+    mass: 10.0  # kg (total mass including propellant)
+    diameter: 0.1  # meters
+    drag_coefficient: 0.5
+    thrust: 200.0  # Newtons
+    specific_impulse: 180.0  # seconds
+    propellant_mass: 2.0  # kg
+  
+  gravity: 9.81  # m/s^2
+  air_density_sea_level: 1.225  # kg/m^3
+  scale_height: 8500.0  # meters
+
+high_speed_control:
+  enabled: true
+  
+  adaptive_gain: 1.0
+  adaptation_rate: 0.1
+  reference_model_damping: 0.7
+  reference_model_frequency: 2.0  # rad/s
+  
+  base_gains:
+    roll:
+      kp: 2.0
+      ki: 0.1
+      kd: 0.5
+    pitch:
+      kp: 2.0
+      ki: 0.1
+      kd: 0.5
+    yaw:
+      kp: 1.5
+      ki: 0.05
+      kd: 0.3
+  
+  regime_multipliers:
+    subsonic: 1.0      # Mach < 0.8
+    transonic: 1.5     # 0.8 <= Mach < 1.2 (increased for instability)
+    supersonic: 1.2    # 1.2 <= Mach < 5.0
+    hypersonic: 0.8    # Mach >= 5.0 (reduced for stability)
+  
+  enable_aero_compensation: true
+  center_of_pressure_offset: 0.0  # meters from CG
+  
+  actuator_delay: 0.02  # seconds
+  sensor_delay: 0.01  # seconds
+  
+  max_mach: 6.0
+  max_dynamic_pressure: 50000.0  # Pa
+  max_angle_of_attack_by_regime:
+    subsonic: 20.0  # degrees
+    transonic: 10.0
+    supersonic: 15.0
+    hypersonic: 8.0
+
+mission:
+  mission_type: "waypoint"
+  
+  home_position:
+    latitude: 0.0  # degrees (MUST be configured)
+    longitude: 0.0  # degrees (MUST be configured)
+    altitude: 0.0  # meters MSL
+  
+  waypoints: []
+  
+  target:
+    type: "fixed"  # Options: fixed, moving
+    latitude: 0.0  # degrees (MUST be configured)
+    longitude: 0.0  # degrees (MUST be configured)
+    altitude: 0.0  # meters MSL
+    velocity_north: 0.0  # m/s (for moving targets)
+    velocity_east: 0.0  # m/s (for moving targets)
+    velocity_down: 0.0  # m/s (for moving targets)
+
+safety:
+  geofence:
+    enabled: true
+    max_altitude: 3000.0  # meters AGL
+    max_range: 5000.0  # meters from home
+    min_altitude: 10.0  # meters AGL
+  
+  abort_conditions:
+    max_tilt_angle: 45.0  # degrees
+    min_battery_voltage: 10.5  # volts
+    max_descent_rate: 50.0  # m/s
+    communication_timeout: 5.0  # seconds
+  
+  emergency:
+    deploy_parachute_on_abort: true
+    return_home_on_low_battery: true
+    abort_on_geofence_breach: true
+
+data_logging:
+  enabled: true
+  log_rate: 100.0  # Hz
+  log_directory: "logs"
+  log_format: "csv"  # Options: csv, json, binary
+  
+  log_items:
+    - "timestamp"
+    - "position"  # GPS position
+    - "velocity"  # 3D velocity
+    - "attitude"  # Roll, pitch, yaw
+    - "angular_rates"  # Roll rate, pitch rate, yaw rate
+    - "acceleration"  # 3D acceleration
+    - "target_position"  # Target position (if tracking)
+    - "navigation_commands"  # Desired heading, speed, altitude
+    - "control_commands"  # Fin deflections
+    - "flight_regime"  # Subsonic, transonic, supersonic, hypersonic
+    - "mach_number"
+    - "dynamic_pressure"
+    - "trajectory_deviation"  # Cross-track, altitude, along-track errors
+
+communication:
+  mavlink:
+    connection_string: "udp://:14540"  # PX4 SITL default
+    system_id: 1
+    component_id: 1
+  
+  telemetry:
+    enabled: true
+    rate: 10.0  # Hz
+    include_extended_data: true
+
+testing:
+  simulation_mode: false
+  
+  hitl_mode: false
+  
+  sitl_mode: false
+  
+  test_duration: 300.0  # seconds
+  enable_safety_checks: true
+  enable_data_recording: true

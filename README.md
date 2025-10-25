@@ -6,6 +6,7 @@ A comprehensive rocket control system using a Companion Computer with PX4 Autopi
 
 ### Key Features
 
+#### Core Features
 - ✅ **Full Python Control**: All control decisions made in the companion computer
 - ✅ **MAVLink Communication**: Reliable communication with PX4 via MAVLink protocol
 - ✅ **Flight Phase Management**: Advanced state machine for managing all flight phases
@@ -14,6 +15,13 @@ A comprehensive rocket control system using a Companion Computer with PX4 Autopi
 - ✅ **Automatic Parachute Deployment**: Safe parachute deployment system
 - ✅ **Data Logging**: Comprehensive logging of all flight data
 - ✅ **Advanced Safety**: Multi-level safety systems
+
+#### Advanced Features (NEW)
+- 🚀 **GPS Navigation**: Waypoint following, return-to-home, orbit mode
+- 🎯 **Target Tracking**: Fixed and moving target tracking with proportional navigation
+- 📐 **Trajectory Control**: Optimal trajectory planning and guidance
+- ⚡ **High-Speed Flight**: Adaptive control for subsonic to hypersonic flight (Mach 0-6)
+- 🌍 **Coordinate Transforms**: Comprehensive coordinate transformation utilities
 
 ---
 
@@ -80,23 +88,36 @@ px4_rocket_integration/
 │
 ├── controllers/                   # Controllers
 │   ├── attitude_controller.py    # Attitude controller
-│   └── altitude_controller.py    # Altitude controller
+│   ├── altitude_controller.py    # Altitude controller
+│   └── high_speed_controller.py  # High-speed adaptive controller (NEW)
 │
 ├── algorithms/                    # Algorithms
 │   ├── kalman_filter.py          # Kalman filter
 │   └── apogee_detector.py        # Apogee detector
 │
+├── navigation/                    # Navigation systems (NEW)
+│   ├── gps_navigation.py         # GPS waypoint navigation
+│   ├── target_tracking.py        # Target tracking system
+│   └── trajectory_control.py     # Trajectory planning and control
+│
 ├── actuators/                     # Actuators
 │   ├── servo_control.py          # Servo control
 │   └── parachute_control.py      # Parachute control
 │
+├── utils/                         # Utilities (NEW)
+│   └── coordinate_transforms.py  # Coordinate transformation utilities
+│
 ├── config/                        # Configuration files
 │   ├── system_config.yaml        # System settings
 │   ├── pid_config.yaml           # PID settings
-│   └── safety_config.yaml        # Safety settings
+│   ├── safety_config.yaml        # Safety settings
+│   └── advanced_features_config.yaml  # Advanced features config (NEW)
 │
 ├── px4_config/                    # PX4 configurations
 │   └── rocket_airframe.txt       # Rocket airframe config
+│
+├── docs/                          # Documentation (NEW)
+│   └── ADVANCED_FEATURES.md      # Advanced features documentation
 │
 ├── tests/                         # Tests
 │   ├── test_servos.py            # Servo tests
@@ -195,11 +216,52 @@ python3 main_enhanced.py
 
 ---
 
+## Advanced Features
+
+The system now includes advanced features for all rocket types, ranges, speeds, and target systems:
+
+### 🚀 GPS Navigation
+- Waypoint following with automatic path planning
+- Return-to-home functionality
+- Orbit mode for circling targets
+- Cross-track error correction
+
+### 🎯 Target Tracking
+- Fixed target tracking
+- Moving target tracking with velocity estimation
+- Intercept point calculation
+- Proportional navigation guidance
+
+### 📐 Trajectory Control
+- Optimal launch angle calculation
+- Reference trajectory generation with atmospheric drag
+- Trajectory deviation tracking
+- Guidance commands for trajectory following
+
+### ⚡ High-Speed Flight Control
+- Automatic flight regime detection (subsonic, transonic, supersonic, hypersonic)
+- Adaptive gain scheduling based on Mach number
+- Aerodynamic compensation for center of pressure shift
+- Time delay compensation
+- Flight envelope protection
+
+### 🌍 Coordinate Transformations
+- LLA ↔ ECEF transformations
+- LLA ↔ NED transformations
+- Body ↔ NED transformations
+- Quaternion ↔ Euler angle conversions
+- Distance and bearing calculations
+
+For detailed documentation on advanced features, see [docs/ADVANCED_FEATURES.md](docs/ADVANCED_FEATURES.md)
+
+---
+
 ## Documentation
 
 - **English**: [README.md](README.md) (this file)
 - **Arabic**: [README_AR.md](README_AR.md)
 - **Integration Guide**: [INTEGRATION_GUIDE.md](INTEGRATION_GUIDE.md)
+- **Advanced Features**: [docs/ADVANCED_FEATURES.md](docs/ADVANCED_FEATURES.md) (NEW)
 
 ---
 
