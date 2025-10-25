@@ -1,0 +1,245 @@
+#
+
+multi_stage:
+  enabled: false
+  
+  num_stages: 1
+  
+  auto_ignition: true
+  
+  ignition_delay: 0.5
+  
+  min_altitude_for_staging: 100.0    # Minimum altitude for staging (m)
+  max_staging_velocity: 1000.0       # Maximum velocity for staging (m/s)
+  
+  stages:
+    - stage_number: 1
+      name: "Booster"
+      
+      thrust_curve_file: null  # Path to .eng, .csv, or .yaml file
+      thrust_curve_inline:
+        - [0.0, 0.0]
+        - [0.1, 2000.0]
+        - [2.0, 2000.0]
+        - [5.0, 1500.0]
+        - [5.1, 0.0]
+      
+      dry_mass: 5.0              # Stage dry mass without propellant (kg)
+      propellant_mass: 10.0      # Propellant mass (kg)
+      structural_mass: 3.0       # Mass of stage structure that separates (kg)
+      
+      separation_delay: 0.5      # Delay after burnout before separation (s)
+      separation_impulse: 100.0  # Impulse from separation mechanism (N·s)
+      
+      length: 1.0                # Stage length (m)
+      diameter: 0.2              # Stage diameter (m)
+    
+    - stage_number: 2
+      name: "Sustainer"
+      
+      thrust_curve_inline:
+        - [0.0, 0.0]
+        - [0.1, 1000.0]
+        - [5.0, 1000.0]
+        - [10.0, 800.0]
+        - [10.1, 0.0]
+      
+      dry_mass: 3.0
+      propellant_mass: 5.0
+      structural_mass: 2.0
+      
+      separation_delay: 0.5
+      separation_impulse: 50.0
+      
+      length: 0.8
+      diameter: 0.15
+
+warhead:
+  mass: 10.0                     # Warhead mass (kg)
+  length: 0.5                    # Warhead length (m)
+  diameter: 0.15                 # Warhead diameter (m)
+  
+  cg_position: [0.25, 0.0, 0.0]
+  
+  drag_coefficient: 0.3          # Drag coefficient
+  lift_coefficient: 0.0          # Lift coefficient (for glide mode)
+  reference_area: 0.0177         # Reference area (m²), auto-calculated if 0
+
+separation:
+  enabled: false
+  
+  trigger_type: "time"
+  
+  trigger_value: 60.0
+  
+  separation_impulse: 100.0      # Separation impulse (N·s)
+  separation_direction: [1.0, 0.0, 0.0]  # Separation direction (unit vector)
+  
+  terminal_mode: "none"
+  
+  glide_ratio: 3.0               # L/D ratio for glide
+  glide_angle: -30.0             # Glide angle (degrees, negative = down)
+  
+  dive_angle: -90.0              # Dive angle (degrees, -90 = vertical)
+  dive_start_altitude: 1000.0    # Altitude to start dive (m)
+  
+  num_fragments: 10              # Number of fragments
+  fragment_spread_angle: 30.0    # Spread angle (degrees)
+  fragment_velocity: 50.0        # Fragment ejection velocity (m/s)
+
+
+example_single_stage:
+  multi_stage:
+    enabled: false
+    num_stages: 1
+  
+  separation:
+    enabled: false
+
+example_two_stage_with_warhead:
+  multi_stage:
+    enabled: true
+    num_stages: 2
+    auto_ignition: true
+    ignition_delay: 0.5
+    
+    stages:
+      - stage_number: 1
+        name: "Booster"
+        dry_mass: 10.0
+        propellant_mass: 20.0
+        structural_mass: 5.0
+        separation_delay: 0.5
+        
+      - stage_number: 2
+        name: "Sustainer"
+        dry_mass: 5.0
+        propellant_mass: 10.0
+        structural_mass: 3.0
+        separation_delay: 0.5
+  
+  warhead:
+    mass: 15.0
+    length: 0.6
+    diameter: 0.18
+  
+  separation:
+    enabled: true
+    trigger_type: "altitude"
+    trigger_value: 5000.0
+    terminal_mode: "glide"
+    glide_ratio: 4.0
+
+example_three_stage_icbm:
+  multi_stage:
+    enabled: true
+    num_stages: 3
+    auto_ignition: true
+    ignition_delay: 0.3
+    min_altitude_for_staging: 1000.0
+    max_staging_velocity: 3000.0
+    
+    stages:
+      - stage_number: 1
+        name: "First Stage"
+        dry_mass: 50.0
+        propellant_mass: 200.0
+        structural_mass: 30.0
+        separation_delay: 1.0
+        separation_impulse: 500.0
+        length: 5.0
+        diameter: 1.0
+      
+      - stage_number: 2
+        name: "Second Stage"
+        dry_mass: 20.0
+        propellant_mass: 80.0
+        structural_mass: 15.0
+        separation_delay: 0.8
+        separation_impulse: 300.0
+        length: 3.0
+        diameter: 0.8
+      
+      - stage_number: 3
+        name: "Post-Boost Vehicle"
+        dry_mass: 10.0
+        propellant_mass: 30.0
+        structural_mass: 8.0
+        separation_delay: 0.5
+        separation_impulse: 200.0
+        length: 2.0
+        diameter: 0.6
+  
+  warhead:
+    mass: 50.0
+    length: 1.5
+    diameter: 0.5
+    drag_coefficient: 0.2
+  
+  separation:
+    enabled: true
+    trigger_type: "altitude"
+    trigger_value: 100000.0  # Separate at 100km altitude
+    terminal_mode: "fragmentation"
+    num_fragments: 10
+    fragment_spread_angle: 20.0
+    fragment_velocity: 100.0
+
+example_tactical_missile:
+  multi_stage:
+    enabled: true
+    num_stages: 2
+    auto_ignition: true
+    
+    stages:
+      - stage_number: 1
+        name: "Booster"
+        dry_mass: 15.0
+        propellant_mass: 30.0
+        structural_mass: 10.0
+        separation_delay: 0.5
+      
+      - stage_number: 2
+        name: "Sustainer"
+        dry_mass: 8.0
+        propellant_mass: 15.0
+        structural_mass: 5.0
+        separation_delay: 0.5
+  
+  warhead:
+    mass: 20.0
+    length: 0.8
+    diameter: 0.25
+    drag_coefficient: 0.25
+  
+  separation:
+    enabled: true
+    trigger_type: "distance"
+    trigger_value: 5000.0  # Separate at 5km from target
+    terminal_mode: "dive"
+    dive_angle: -90.0
+    dive_start_altitude: 2000.0
+
+example_cruise_missile:
+  multi_stage:
+    enabled: false  # Single stage with long burn
+  
+  warhead:
+    mass: 25.0
+    length: 1.0
+    diameter: 0.3
+    drag_coefficient: 0.2
+    lift_coefficient: 0.8  # High lift for gliding
+  
+  separation:
+    enabled: true
+    trigger_type: "distance"
+    trigger_value: 10000.0  # Separate at 10km from target
+    terminal_mode: "glide"
+    glide_ratio: 5.0
+    glide_angle: -20.0
+
+# 
+#
+#
+#

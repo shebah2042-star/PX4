@@ -30,6 +30,12 @@ A comprehensive rocket control system using a Companion Computer with PX4 Autopi
 - ✈️ **Aerodynamic Model**: Full coefficient modeling (CL, CD, Cm, CY, Cl, Cn)
 - 🌡️ **Standard Atmosphere**: US Standard Atmosphere 1976 for high-altitude flight
 
+#### Multi-Stage & Warhead Systems (NEW)
+- 🚀 **Multi-Stage Propulsion**: Support for 2-3 stage rockets with automatic separation
+- 💣 **Warhead Separation**: Configurable separation with multiple trigger types
+- 🎯 **Terminal Attack Modes**: Glide, dive, fragmentation, and maneuvering modes
+- ⚙️ **Stage Management**: Automatic mass/CG updates and stage sequencing
+
 ---
 
 ## Architecture
@@ -116,7 +122,8 @@ px4_rocket_integration/
 │   └── coordinate_transforms.py  # Coordinate transformation utilities
 │
 ├── propulsion/                    # Propulsion systems (NEW)
-│   └── thrust_model.py           # Thrust curve model with mass depletion
+│   ├── thrust_model.py           # Thrust curve model with mass depletion
+│   └── multi_stage_system.py    # Multi-stage propulsion system (NEW)
 │
 ├── aero/                          # Aerodynamics (NEW)
 │   └── aero_model.py             # Aerodynamic coefficient modeling
@@ -124,12 +131,16 @@ px4_rocket_integration/
 ├── atmosphere/                    # Atmosphere modeling (NEW)
 │   └── standard_atmosphere.py    # US Standard Atmosphere 1976
 │
+├── payload/                       # Payload systems (NEW)
+│   └── warhead_separation.py    # Warhead separation and terminal modes
+│
 ├── config/                        # Configuration files
 │   ├── system_config.yaml        # System settings
 │   ├── pid_config.yaml           # PID settings
 │   ├── safety_config.yaml        # Safety settings
 │   ├── advanced_features_config.yaml  # Advanced features config (NEW)
-│   └── control_systems_config.yaml    # Control systems config (NEW)
+│   ├── control_systems_config.yaml    # Control systems config (NEW)
+│   └── advanced_systems_config.yaml   # Multi-stage & warhead config (NEW)
 │
 ├── px4_config/                    # PX4 configurations
 │   └── rocket_airframe.txt       # Rocket airframe config
@@ -139,7 +150,8 @@ px4_rocket_integration/
 │   └── CONTROL_SYSTEMS.md        # Control systems documentation (NEW)
 │
 ├── examples/                      # Examples (NEW)
-│   └── advanced_integration_example.py  # Integration example
+│   ├── advanced_integration_example.py  # Control systems integration
+│   └── multi_stage_warhead_example.py   # Multi-stage & warhead example (NEW)
 │
 ├── tests/                         # Tests
 │   ├── test_servos.py            # Servo tests
@@ -275,6 +287,33 @@ The system now includes advanced features for all rocket types, ranges, speeds, 
 - Distance and bearing calculations
 
 For detailed documentation on advanced features, see [docs/ADVANCED_FEATURES.md](docs/ADVANCED_FEATURES.md)
+
+### 🚀 Multi-Stage Propulsion
+- Support for 2-3 stage rockets
+- Automatic stage separation after burnout
+- Configurable separation delays and impulses
+- Auto-ignition of next stage
+- Mass and CG updates after each separation
+- Safety limits for staging altitude and velocity
+
+### 💣 Warhead Separation
+- Multiple separation triggers:
+  - Time-based (seconds from launch)
+  - Altitude-based (meters above ground)
+  - Distance-based (meters from target)
+  - Apogee detection
+  - Manual command
+- Configurable separation impulse and direction
+- Automatic mass updates after separation
+
+### 🎯 Terminal Attack Modes
+- **None**: Ballistic trajectory after separation
+- **Glide**: Controlled glide toward target with lift
+- **Dive**: Vertical dive on target from specified altitude
+- **Fragmentation**: Split into multiple submunitions with configurable spread
+- **Maneuver**: Maneuvering reentry (future capability)
+
+For detailed documentation on multi-stage and warhead systems, see [config/advanced_systems_config.yaml](config/advanced_systems_config.yaml)
 
 ---
 
