@@ -1,0 +1,203 @@
+
+control_allocator:
+  configuration: tail_only
+  
+  surfaces:
+    - type: tail
+      index: 0
+      channel: 1
+      angle_offset: 0.0      # degrees
+      max_deflection: 30.0   # degrees
+      min_deflection: -30.0  # degrees
+      effectiveness_factor: 1.0
+      position_x: -0.9       # meters from nose (negative = aft)
+      position_y: 0.05       # meters from centerline
+      position_z: 0.0
+    
+    - type: tail
+      index: 1
+      channel: 2
+      angle_offset: 0.0
+      max_deflection: 30.0
+      min_deflection: -30.0
+      effectiveness_factor: 1.0
+      position_x: -0.9
+      position_y: -0.05
+      position_z: 0.0
+    
+    - type: tail
+      index: 2
+      channel: 3
+      angle_offset: 0.0
+      max_deflection: 30.0
+      min_deflection: -30.0
+      effectiveness_factor: 1.0
+      position_x: -0.9
+      position_y: 0.0
+      position_z: 0.05
+    
+    - type: tail
+      index: 3
+      channel: 4
+      angle_offset: 0.0
+      max_deflection: 30.0
+      min_deflection: -30.0
+      effectiveness_factor: 1.0
+      position_x: -0.9
+      position_y: 0.0
+      position_z: -0.05
+    
+  
+  tvc:
+    enabled: false           # Set to true to enable TVC
+    pitch_channel: 9         # PWM channel for pitch gimbal
+    yaw_channel: 10          # PWM channel for yaw gimbal
+    max_pitch_angle: 10.0    # degrees
+    max_yaw_angle: 10.0      # degrees
+    min_pitch_angle: -10.0   # degrees
+    min_yaw_angle: -10.0     # degrees
+    pitch_pwm_min: 1000      # microseconds
+    pitch_pwm_max: 2000
+    yaw_pwm_min: 1000
+    yaw_pwm_max: 2000
+    pitch_pwm_center: 1500
+    yaw_pwm_center: 1500
+    effectiveness_factor: 1.0
+    position_x: -0.95        # meters from nose (at nozzle)
+  
+  mixing_weights:
+    canard: 0.5              # Weight for canards (0-1)
+    tail: 0.5                # Weight for tail fins (0-1)
+    tvc: 0.3                 # Weight for TVC (0-1)
+  
+  rate_limits:
+    surface_rate: 200.0      # degrees/second
+    tvc_rate: 100.0          # degrees/second
+  
+  effectiveness_curves:
+    mach:
+      - mach: 0.0
+        effectiveness: 1.0
+      - mach: 0.8
+        effectiveness: 1.0
+      - mach: 1.0
+        effectiveness: 0.7   # Reduced at transonic
+      - mach: 1.2
+        effectiveness: 0.8
+      - mach: 2.0
+        effectiveness: 0.9
+      - mach: 5.0
+        effectiveness: 0.85
+    
+    dynamic_pressure:
+      - q: 0.0
+        effectiveness: 0.1
+      - q: 500.0
+        effectiveness: 0.5
+      - q: 2000.0
+        effectiveness: 1.0
+      - q: 10000.0
+        effectiveness: 1.0
+      - q: 50000.0
+        effectiveness: 0.9
+    
+    angle_of_attack:
+      - aoa: 0.0
+        effectiveness: 1.0
+      - aoa: 5.0
+        effectiveness: 1.0
+      - aoa: 10.0
+        effectiveness: 0.95
+      - aoa: 15.0
+        effectiveness: 0.85
+      - aoa: 20.0
+        effectiveness: 0.7
+      - aoa: 30.0
+        effectiveness: 0.5
+
+thrust_model:
+  curve_type: time_based
+  
+  
+  curve_points:
+    - time: 0.0
+      thrust: 0.0
+    - time: 0.05
+      thrust: 800.0
+    - time: 0.5
+      thrust: 750.0
+    - time: 1.0
+      thrust: 700.0
+    - time: 2.0
+      thrust: 650.0
+    - time: 3.0
+      thrust: 600.0
+    - time: 3.5
+      thrust: 400.0
+    - time: 3.8
+      thrust: 100.0
+    - time: 4.0
+      thrust: 0.0
+  
+  motor_parameters:
+    name: "Generic Motor"
+    manufacturer: "Generic"
+    total_impulse: 2500.0    # N·s (calculated from curve if not provided)
+    burn_time: 4.0           # seconds
+    average_thrust: 625.0    # N
+    max_thrust: 800.0        # N
+    propellant_mass: 1.5     # kg
+    motor_mass: 0.5          # kg (empty motor)
+    diameter: 0.075          # meters
+    length: 0.4              # meters
+  
+  mass_properties:
+    dry_mass: 10.0           # kg (without propellant)
+    propellant_mass: 1.5     # kg
+    cg_dry: 0.6              # meters from nose (empty)
+    cg_wet: 0.65             # meters from nose (fully fueled)
+    cp_position: 0.85        # meters from nose (center of pressure)
+
+aero_model:
+  reference_geometry:
+    area: 0.00785            # m² (π * (0.1/2)²)
+    length: 1.0              # meters
+    diameter: 0.1            # meters
+    moment_reference: 0.5    # meters from nose
+  
+  body:
+    length: 1.0              # meters
+    diameter: 0.1            # meters
+    nose_length: 0.2         # meters
+    nose_shape: ogive        # cone, ogive, parabolic
+  
+  fins:
+    count: 4
+    area: 0.0025             # m² per fin
+    span: 0.05               # meters
+    root_chord: 0.1          # meters
+    tip_chord: 0.05          # meters
+    position: 0.85           # fraction of length from nose
+  
+  analytical_model:
+    enabled: true            # Use analytical model (true) or tables (false)
+    base_drag: 0.15          # Base drag coefficient
+    skin_friction: 0.02      # Skin friction coefficient
+    wave_drag: 0.1           # Wave drag coefficient
+    lift_slope: 2.0          # per radian
+    moment_slope: -0.5       # per radian (negative for stability)
+  
+  compressibility:
+    prandtl_glauert: true    # Apply Prandtl-Glauert correction
+    transonic_drag_peak: 1.2 # Mach number of peak drag
+  
+  #   
+  #   
+  #   
+
+atmosphere_model:
+  model_type: standard
+  
+  simple_model:
+    scale_height: 8500.0     # meters
+    temp_lapse_rate: 0.0065  # K/m

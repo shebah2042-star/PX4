@@ -23,6 +23,13 @@ A comprehensive rocket control system using a Companion Computer with PX4 Autopi
 - ⚡ **High-Speed Flight**: Adaptive control for subsonic to hypersonic flight (Mach 0-6)
 - 🌍 **Coordinate Transforms**: Comprehensive coordinate transformation utilities
 
+#### Control Systems (NEW)
+- 🎛️ **Control Allocator**: Support for canards, tail fins, or both configurations
+- 🔥 **Thrust Vector Control (TVC)**: Optional 2-axis gimbal control with enable/disable
+- 📊 **Thrust Curve Model**: Complete thrust modeling with mass depletion and CG shift
+- ✈️ **Aerodynamic Model**: Full coefficient modeling (CL, CD, Cm, CY, Cl, Cn)
+- 🌡️ **Standard Atmosphere**: US Standard Atmosphere 1976 for high-altitude flight
+
 ---
 
 ## Architecture
@@ -89,7 +96,8 @@ px4_rocket_integration/
 ├── controllers/                   # Controllers
 │   ├── attitude_controller.py    # Attitude controller
 │   ├── altitude_controller.py    # Altitude controller
-│   └── high_speed_controller.py  # High-speed adaptive controller (NEW)
+│   ├── high_speed_controller.py  # High-speed adaptive controller (NEW)
+│   └── control_allocator.py     # Control allocator for surfaces/TVC (NEW)
 │
 ├── algorithms/                    # Algorithms
 │   ├── kalman_filter.py          # Kalman filter
@@ -107,17 +115,31 @@ px4_rocket_integration/
 ├── utils/                         # Utilities (NEW)
 │   └── coordinate_transforms.py  # Coordinate transformation utilities
 │
+├── propulsion/                    # Propulsion systems (NEW)
+│   └── thrust_model.py           # Thrust curve model with mass depletion
+│
+├── aero/                          # Aerodynamics (NEW)
+│   └── aero_model.py             # Aerodynamic coefficient modeling
+│
+├── atmosphere/                    # Atmosphere modeling (NEW)
+│   └── standard_atmosphere.py    # US Standard Atmosphere 1976
+│
 ├── config/                        # Configuration files
 │   ├── system_config.yaml        # System settings
 │   ├── pid_config.yaml           # PID settings
 │   ├── safety_config.yaml        # Safety settings
-│   └── advanced_features_config.yaml  # Advanced features config (NEW)
+│   ├── advanced_features_config.yaml  # Advanced features config (NEW)
+│   └── control_systems_config.yaml    # Control systems config (NEW)
 │
 ├── px4_config/                    # PX4 configurations
 │   └── rocket_airframe.txt       # Rocket airframe config
 │
 ├── docs/                          # Documentation (NEW)
-│   └── ADVANCED_FEATURES.md      # Advanced features documentation
+│   ├── ADVANCED_FEATURES.md      # Advanced features documentation
+│   └── CONTROL_SYSTEMS.md        # Control systems documentation (NEW)
+│
+├── examples/                      # Examples (NEW)
+│   └── advanced_integration_example.py  # Integration example
 │
 ├── tests/                         # Tests
 │   ├── test_servos.py            # Servo tests
@@ -261,7 +283,8 @@ For detailed documentation on advanced features, see [docs/ADVANCED_FEATURES.md]
 - **English**: [README.md](README.md) (this file)
 - **Arabic**: [README_AR.md](README_AR.md)
 - **Integration Guide**: [INTEGRATION_GUIDE.md](INTEGRATION_GUIDE.md)
-- **Advanced Features**: [docs/ADVANCED_FEATURES.md](docs/ADVANCED_FEATURES.md) (NEW)
+- **Advanced Features**: [docs/ADVANCED_FEATURES.md](docs/ADVANCED_FEATURES.md)
+- **Control Systems**: [docs/CONTROL_SYSTEMS.md](docs/CONTROL_SYSTEMS.md) (NEW)
 
 ---
 
