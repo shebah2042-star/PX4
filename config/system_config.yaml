@@ -1,0 +1,82 @@
+# إعدادات النظام الرئيسية
+# System Configuration for Rocket Control System
+
+# إعدادات الاتصال مع PX4
+mavlink:
+  connection_string: "udp://:14540"  # عنوان الاتصال
+  timeout: 10  # زمن الانتظار بالثواني
+  heartbeat_rate: 1.0  # معدل نبضات القلب
+
+# إعدادات معدلات التحديث
+update_rates:
+  control_loop: 100  # Hz - حلقة التحكم الرئيسية
+  sensor_read: 100  # Hz - قراءة المستشعرات
+  data_logging: 50  # Hz - تسجيل البيانات
+  telemetry: 10  # Hz - إرسال البيانات
+
+# إعدادات السيرفوهات
+servos:
+  fin_1:
+    channel: 0
+    min_pwm: 1000
+    max_pwm: 2000
+    center_pwm: 1500
+    reverse: false
+  fin_2:
+    channel: 1
+    min_pwm: 1000
+    max_pwm: 2000
+    center_pwm: 1500
+    reverse: false
+  fin_3:
+    channel: 2
+    min_pwm: 1000
+    max_pwm: 2000
+    center_pwm: 1500
+    reverse: false
+  fin_4:
+    channel: 3
+    min_pwm: 1000
+    max_pwm: 2000
+    center_pwm: 1500
+    reverse: false
+
+# إعدادات المظلة
+parachute:
+  drogue_channel: 4
+  main_channel: 5
+  drogue_deploy_pwm: 2000
+  main_deploy_pwm: 2000
+  drogue_altitude: 300  # متر - ارتفاع نشر المظلة الأولية
+  main_altitude: 150  # متر - ارتفاع نشر المظلة الرئيسية
+
+# إعدادات الحمولة
+payload:
+  door_channel: 6
+  camera_channel: 7
+
+# حدود الأمان
+safety_limits:
+  max_altitude: 3000  # متر
+  max_velocity: 300  # متر/ثانية
+  max_acceleration: 100  # متر/ثانية²
+  max_angle: 45  # درجة
+  max_angular_rate: 180  # درجة/ثانية
+  min_battery_voltage: 10.5  # فولت
+
+# إعدادات كشف القمة
+apogee_detection:
+  velocity_threshold: 5.0  # متر/ثانية
+  acceleration_threshold: -2.0  # متر/ثانية²
+  confirmation_time: 0.5  # ثانية
+  barometer_weight: 0.7
+  gps_weight: 0.3
+
+# إعدادات التسجيل
+logging:
+  log_directory: "logs"
+  data_directory: "data"
+  log_level: "INFO"
+  save_raw_data: true
+  save_processed_data: true
+

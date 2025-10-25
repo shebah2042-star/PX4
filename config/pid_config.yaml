@@ -1,0 +1,69 @@
+# إعدادات متحكمات PID
+# PID Controllers Configuration
+
+# متحكم زاوية الميل (Pitch)
+pitch:
+  kp: 2.5
+  ki: 0.1
+  kd: 0.8
+  output_min: -30  # درجة
+  output_max: 30   # درجة
+  integral_min: -10
+  integral_max: 10
+  derivative_filter: 0.1  # معامل تصفية المشتقة
+
+# متحكم زاوية الانعراج (Yaw)
+yaw:
+  kp: 2.0
+  ki: 0.05
+  kd: 0.5
+  output_min: -30
+  output_max: 30
+  integral_min: -10
+  integral_max: 10
+  derivative_filter: 0.1
+
+# متحكم زاوية الدوران (Roll)
+roll:
+  kp: 3.0
+  ki: 0.15
+  kd: 1.0
+  output_min: -45
+  output_max: 45
+  integral_min: -15
+  integral_max: 15
+  derivative_filter: 0.1
+
+# متحكم الارتفاع (Altitude)
+altitude:
+  kp: 1.5
+  ki: 0.05
+  kd: 0.6
+  output_min: -20
+  output_max: 20
+  integral_min: -5
+  integral_max: 5
+  derivative_filter: 0.15
+
+# متحكم السرعة العمودية (Vertical Velocity)
+vertical_velocity:
+  kp: 0.8
+  ki: 0.02
+  kd: 0.3
+  output_min: -15
+  output_max: 15
+  integral_min: -3
+  integral_max: 3
+  derivative_filter: 0.1
+
+# متحكم الاتجاه (Heading)
+heading:
+  kp: 1.8
+  ki: 0.08
+  kd: 0.4
+  output_min: -25
+  output_max: 25
+  integral_min: -8
+  integral_max: 8
+  derivative_filter: 0.1
+
